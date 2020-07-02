@@ -13,11 +13,14 @@ def conditional_statistical_parity_difference(con_att, X_test, X_test_a, y_pred_
     spd_list = []
     for att in con_att:
         for value in X_test[att].unique():
-            y_pred_a_value = y_pred_a[X_test_a[att] == value]
-            y_pred_b_value = y_pred_b[X_test_b[att] == value]
-            if len(y_pred_a_value) != 0 and len(y_pred_b_value) != 0:
-                spd_value = statistical_parity_difference(y_pred_a_value, y_pred_b_value)
-                spd_list.append(spd_value)
+            try:
+                y_pred_a_value = y_pred_a[X_test_a[att] == value]
+                y_pred_b_value = y_pred_b[X_test_b[att] == value]
+                if len(y_pred_a_value) != 0 and len(y_pred_b_value) != 0:
+                    spd_value = statistical_parity_difference(y_pred_a_value, y_pred_b_value)
+                    spd_list.append(spd_value)
+            except KeyError as e1:
+                print('KeyError occured')
 
     if len(spd_list) == 0:
         return 0.0
@@ -102,13 +105,15 @@ def split_data(X_train, y_train, X_test, y_test, model, att, val1=1, val2=0):
 
     return X_train_a, y_train_a, X_test_a, y_test_a, y_pred_a, X_train_b, y_train_b, X_test_b, y_test_b, y_pred_b
 
-def bar_plot(att, val, x_label, size):
+def bar_plot(att, val, x_label, size, save = False, title='no_title'):
     plt.rcdefaults()
     fig, ax = plt.subplots(figsize=size)
     ax.barh(np.arange(len(att)), val, align='center', height=0.8,)
     ax.set_yticks(np.arange(len(att)))
     ax.set_yticklabels(att)
     ax.invert_yaxis()  # labels read top-to-bottom
-    ax.set_xlabel(x_label)
-
+    #ax.set_xlabel(x_label)
+    if(save):
+        plt.tight_layout()
+        plt.savefig(title + '.png')
     plt.show()

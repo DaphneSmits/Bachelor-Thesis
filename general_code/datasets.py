@@ -35,7 +35,8 @@ def compas(include_sex = True):
         X_test = X_test[[i for i in list(X_test.columns) if i != 'sex_male']]
         return X_train, X_test, y_train, y_test, is_male_train, is_male_test
 
-    return X_train, X_test, y_train, y_test
+    # return X_train, X_test, y_train, y_test
+    return data
 
 def german_credit(include_sex = True):
     ## Import data
@@ -118,13 +119,13 @@ def german_credit(include_sex = True):
     data['telephone'] = data['telephone'].replace(1,0)
     data['telephone'] = data['telephone'].replace(2, 1)
 
+    # Change the values of the output column: good = '0', bad = '1'
+    data['Risk'] = data['Risk'].replace(1, 0)
+    data['Risk'] = data['Risk'].replace(2, 1)
+
     # Split the data into train and test data:
     y = data['Risk']
     X = data[[i for i in list(data.columns) if i != 'Risk']]
-
-    # Change: good = '0', bad = '1'
-    y = y.replace(1, 0)
-    y = y.replace(2, 1)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -141,4 +142,5 @@ def german_credit(include_sex = True):
                            and i != 'f_single' and i != 'm_mar/wid']]
         return X_train, X_test, y_train, y_test, is_male_train, is_male_test
 
-    return X_train, X_test, y_train, y_test
+    #return X_train, X_test, y_train, y_test
+    return data
